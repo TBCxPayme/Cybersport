@@ -4,21 +4,21 @@
       "name": "Группа A",
       "matches": [
         {
-          "teamA": "Team Alpha",
+          "teamA": "Telesales",
           "scoreA": 1,
-          "teamB": "Team Beta",
+          "teamB": "NePiCARD",
           "scoreB": 0
         },
         {
-          "teamA": "Team Alpha",
+          "teamA": "NePiCARD",
           "scoreA": 0,
-          "teamB": "Team Gamma",
+          "teamB": "Ураган",
           "scoreB": 1
         },
         {
-          "teamA": "Team Beta",
+          "teamA": "Ураган",
           "scoreA": 1,
-          "teamB": "Team Gamma",
+          "teamB": "Telesales",
           "scoreB": 0
         }
       ]
@@ -27,21 +27,21 @@
       "name": "Группа B",
       "matches": [
         {
-          "teamA": "Team Delta",
+          "teamA": "TBCxPayme",
           "scoreA": 1,
-          "teamB": "Team Echo",
+          "teamB": "Ураган",
           "scoreB": 0
         },
         {
-          "teamA": "Team Delta",
+          "teamA": "Ураган",
           "scoreA": 0,
-          "teamB": "Team Foxtrot",
+          "teamB": "МЫ НЕ ШАРИМ",
           "scoreB": 1
         },
         {
-          "teamA": "Team Echo",
+          "teamA": "МЫ НЕ ШАРИМ",
           "scoreA": 1,
-          "teamB": "Team Foxtrot",
+          "teamB": "TBCxPayme",
           "scoreB": 0
         }
       ]
