@@ -5,7 +5,7 @@
       "matches": [
         {
           "teamA": "Telesales",
-          "scoreA": 1,
+          "scoreA": 0,
           "teamB": "NePiCARD",
           "scoreB": 0
         },
@@ -13,11 +13,11 @@
           "teamA": "NePiCARD",
           "scoreA": 0,
           "teamB": "Ураган",
-          "scoreB": 1
+          "scoreB": 0
         },
         {
           "teamA": "Ураган",
-          "scoreA": 1,
+          "scoreA": 0,
           "teamB": "Telesales",
           "scoreB": 0
         }
@@ -28,7 +28,7 @@
       "matches": [
         {
           "teamA": "TBCxPayme",
-          "scoreA": 1,
+          "scoreA": 0,
           "teamB": "Ураган",
           "scoreB": 0
         },
@@ -36,11 +36,11 @@
           "teamA": "Ураган",
           "scoreA": 0,
           "teamB": "МЫ НЕ ШАРИМ",
-          "scoreB": 1
+          "scoreB": 0
         },
         {
           "teamA": "МЫ НЕ ШАРИМ",
-          "scoreA": 1,
+          "scoreA": 0,
           "teamB": "TBCxPayme",
           "scoreB": 0
         }
