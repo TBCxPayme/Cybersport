@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Админ — TBCxPayme CUP</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container { max-width: 1000px; margin: 40px auto; padding: 28px; }
+    .field { margin: 8px 0; }
+    label { display:block; margin-bottom:6px; color:#bfefff; }
+    input[type="text"], input[type="password"], input[type="number"] { width: 320px; padding:8px; border-radius:6px; border:1px solid rgba(0,255,200,0.2); background:rgba(0,0,0,0.35); color:#e6fff8; }
+    #ownerRepo { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .log { margin-top:12px; padding:10px; background:rgba(0,0,0,0.45); color:#9ff; border-radius:6px; height:160px; overflow:auto; font-family:monospace; font-size:13px; }
+    .small { font-size:13px; color:#9fe8e0; }
+    .round { margin-bottom:18px; }
+    .match input[type="text"] { width:160px }
+    .match input[type="number"] { width:80px }
+  </style>
+</head>
+<body class="admin-body">
+  <div class="admin-container">
+    <h1>Панель управления — TBCxPayme CUP</h1>
+
+    <div class="field" id="ownerRepo">
+      <div>
+        <label>Владелец (owner)</label>
+        <input id="owner" type="text" placeholder="например: TBCxPayme" value="TBCxPayme">
+      </div>
+      <div>
+        <label>Репозиторий (repo)</label>
+        <input id="repo" type="text" placeholder="например: CyberSport" value="CyberSport">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>🔑 GitHub token (classic) — временно хранится в sessionStorage</label>
+      <input id="token" type="password" placeholder="ghp_xxx..." />
+      <button id="saveTokenBtn">Сохранить токен</button>
+    </div>
+
+    <div class="field">
+      <label>📝 Commit message</label>
+      <input id="commitMsg" type="text" placeholder="Например: Обновлены результаты" />
+    </div>
+
+    <div style="margin:12px 0;">
+      <button id="loadBtn">Загрузить data.json из репозитория</button>
+      <button id="saveBtn">Сохранить data.json в репозитории</button>
+      <span class="small">(Сначала загрузите — затем редактируйте и сохраняйте)</span>
+    </div>
+
+    <div id="status" class="status-box" style="display:none"></div>
+
+    <div id="adminBracket"></div>
+
+    <h3>Лог</h3>
+    <pre id="log" class="log"></pre>
+  </div>
+
+  <script>
+  // helper for unicode -> base64
+  function toBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function fromBase64(b64){ return decodeURIComponent(escape(atob(b64))); }
+
+  const ownerInput = document.getElementById('owner');
+  const repoInput = document.getElementById('repo');
+  const tokenInput = document.getElementById('token');
+  const saveTokenBtn = document.getElementById('saveTokenBtn');
+  const loadBtn = document.getElementById('loadBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const commitMsgInput = document.getElementById('commitMsg');
+  const adminBracket = document.getElementById('adminBracket');
+  const statusEl = document.getElementById('status');
+  const logEl = document.getElementById('log');
+
+  let fileSha = null;
+  let dataset = null;
+  const PATH = 'data.json';
+
+  function log(msg){
+    const time = new Date().toLocaleTimeString();
+    logEl.textContent += `[${time}] ${msg}\n`;
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function showStatus(text, type='info'){
+    statusEl.style.display = 'block';
+    statusEl.textContent = text;
+    statusEl.className = 'status-box ' + (type==='success'?'success': type==='error'?'error':'loading');
+  }
+
+  saveTokenBtn.addEventListener('click', ()=>{
+    const token = tokenInput.value.trim();
+    if(!token){ showStatus('Введите токен', 'error'); return; }
+    sessionStorage.setItem('GHTOKEN', token);
+    showStatus('Токен сохранён в сессии', 'success'); log('Токен сохранён в sessionStorage');
+  });
+
+  loadBtn.addEventListener('click', async ()=>{
+    const owner = ownerInput.value.trim();
+    const repo = repoInput.value.trim();
+    const token = sessionStorage.getItem('GHTOKEN');
+    if(!owner || !repo){ showStatus('Укажите owner и repo', 'error'); return; }
+    if(!token){ showStatus('Сохраните токен в сессии', 'error'); return; }
+
+    showStatus('Загружаю data.json...', 'loading'); log(`GET /repos/${owner}/${repo}/contents/${PATH}`);
+    try{
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${PATH}`, {
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if(!res.ok){ const err = await res.json(); throw new Error(err.message || res.status); }
+      const j = await res.json();
+      fileSha = j.sha;
+      dataset = JSON.parse(fromBase64(j.content));
+      showStatus('✅ data.json загружен', 'success'); log('data.json загружен, sha=' + fileSha);
+      renderAdmin(dataset.rounds);
+    }catch(e){
+      showStatus('Ошибка загрузки: ' + e.message, 'error'); log('Ошибка загрузки: ' + e.message);
+    }
+  });
+
+  function renderAdmin(rounds){
+    adminBracket.innerHTML = '';
+    rounds.forEach((round, rIndex) => {
+      const block = document.createElement('div');
+      block.className = 'round';
+      const h = document.createElement('h3'); h.textContent = round.name; block.appendChild(h);
+
+      round.matches.forEach((m, mIndex) => {
+        const row = document.createElement('div');
+        row.className = 'match';
+        row.style.display = 'flex'; row.style.gap='8px'; row.style.alignItems='center';
+        row.innerHTML = `
+          <input data-r="${rIndex}" data-m="${mIndex}" data-field="teamA" value="${m.teamA}" />
+          <input data-r="${rIndex}" data-m="${mIndex}" data-field="scoreA" type="number" value="${m.scoreA}" />
+          <span style="margin:0 6px">vs</span>
+          <input data-r="${rIndex}" data-m="${mIndex}" data-field="teamB" value="${m.teamB}" />
+          <input data-r="${rIndex}" data-m="${mIndex}" data-field="scoreB" type="number" value="${m.scoreB}" />
+        `;
+        // listeners:
+        row.querySelectorAll('input').forEach(inp=>{
+          inp.addEventListener('change', (e)=>{
+            const r = +inp.dataset.r, mm = +inp.dataset.m, field = inp.dataset.field;
+            const val = field.includes('score') ? Number(inp.value) : inp.value;
+            dataset.rounds[r].matches[mm][field] = val;
+            // если поменяли групповые результаты — попытка обновить плей-офф placeholder'ы логически
+            // (для простоты — не делаем автоматическую дедсвёртку sha)
+          });
+        });
+        block.appendChild(row);
+      });
+
+      adminBracket.appendChild(block);
+    });
+  }
+
+  saveBtn.addEventListener('click', async ()=>{
+    const owner = ownerInput.value.trim();
+    const repo = repoInput.value.trim();
+    const token = sessionStorage.getItem('GHTOKEN');
+    const commitMsg = commitMsgInput.value.trim() || 'Обновление data.json из админки';
+    if(!owner||!repo) return showStatus('Укажите owner/repo', 'error');
+    if(!token) return showStatus('Сохраните токен в сессии', 'error');
+    if(!dataset) return showStatus('Сначала загрузите data.json', 'error');
+
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${PATH}`;
+    const content = toBase64(JSON.stringify(dataset, null, 2));
+
+    showStatus('Отправка на GitHub...', 'loading'); log('PUT ' + url);
+
+    try{
+      // get current sha if we don't have
+      if(!fileSha){
+        const g = await fetch(url, { headers: { Authorization: `token ${token}` } });
+        if(!g.ok){ const err = await g.json(); throw new Error(err.message || g.status); }
+        const gj = await g.json(); fileSha = gj.sha; log('Получен sha: ' + fileSha);
+      }
+
+      const res = await fetch(url, {
+        method:'PUT',
+        headers: { Authorization: `token ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: commitMsg,
+          content: content,
+          sha: fileSha
+        })
+      });
+
+      const result = await res.json();
+      if(res.ok){
+        fileSha = result.content.sha; // обновлённый sha
+        showStatus('✅ Сохранено в репозитории', 'success');
+        log('Сохранено успешно, новый sha=' + fileSha);
+      } else {
+        throw new Error(result.message || 'Ошибка при сохранении');
+      }
+    }catch(err){
+      showStatus('Ошибка: ' + err.message, 'error');
+      log('Ошибка при сохранении: ' + err.message);
+    }
+  });
+
+  // autoload local data.json if present (preview)
+  (async ()=>{
+    try{
+      const r = await fetch('data.json');
+      if(r.ok){ const d = await r.json(); /* ничего не делаем — просто доступность */ }
+    }catch(e){}
+  })();
+  </script>
+</body>
+</html>

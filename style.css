@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: 'Orbitron', sans-serif;
+  min-height:100vh;
+  background: linear-gradient(135deg,#03121a 0%, #052a2f 50%, #021619 100%);
+  color:#e8fff5;
+}
+
+/* header */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:26px 40px;
+}
+#title{font-size:28px; color:gold; text-shadow:0 0 12px rgba(255,215,0,0.5)}
+.admin-link{color:#00ffd0; text-decoration:none; font-weight:600}
+
+/* bracket layout */
+.bracket{ display:flex; gap:36px; padding:30px 40px; justify-content:center; flex-wrap:wrap }
+.round{ display:flex; flex-direction:column; gap:18px; min-width:260px }
+.round h3{ text-align:center; color:#00dfff; margin:0 0 6px 0 }
+.match{
+  background: rgba(0,255,200,0.04);
+  border:1px solid rgba(0,255,200,0.18);
+  border-radius:10px;
+  padding:10px;
+  box-shadow:0 8px 18px rgba(0,0,0,0.4);
+}
+.team{ display:flex; justify-content:space-between; padding:6px 8px; border-radius:6px; background:rgba(0,0,0,0.12); margin:6px 0 }
+.team.winner{ background: linear-gradient(90deg, rgba(255,215,0,0.14), rgba(255,215,0,0.06)); color: gold; font-weight:700; text-shadow:0 0 8px rgba(255,215,0,0.5) }
+
+/* standings table */
+.table { width:100%; border-collapse:collapse; margin-top:8px; }
+.table th, .table td { padding:6px 8px; text-align:left; font-size:13px; }
+.table th { color:#9ff; font-size:13px; }
+.table tr { background: rgba(0,0,0,0.06); border-radius:6px; }
+
+/* admin */
+.admin-body { background: radial-gradient(circle at top left, #021a24, #010c12); }
+.admin-container{ max-width:1000px; margin:30px auto; padding:24px; background: rgba(0,0,0,0.35); border-radius:12px; }
+.status-box{ display:inline-block; padding:8px 12px; margin:8px 0; border-radius:8px; font-weight:700 }
+.status-box.success{ background:rgba(0,255,100,0.14); border:1px solid #00ff88; color:#aef }
+.status-box.error{ background:rgba(255,50,50,0.12); border:1px solid #ff7777; color:#ffc0c0 }
+.status-box.loading{ background:rgba(255,200,0,0.12); border:1px solid #ffcc66; color:#fff2b8 }
+
+/* small */
+.round, .match input { font-family: inherit }
+
+/* responsive */
+@media (max-width:900px){
+  .bracket{ flex-direction:column; align-items:center }
+}

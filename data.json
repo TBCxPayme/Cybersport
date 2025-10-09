@@ -1,0 +1,33 @@
+{
+  "rounds": [
+    {
+      "name": "Группа A",
+      "matches": [
+        { "teamA": "Alpha", "scoreA": 1, "teamB": "Beta", "scoreB": 0 },
+        { "teamA": "Alpha", "scoreA": 0, "teamB": "Gamma", "scoreB": 1 },
+        { "teamA": "Beta", "scoreA": 1, "teamB": "Gamma", "scoreB": 0 }
+      ]
+    },
+    {
+      "name": "Группа B",
+      "matches": [
+        { "teamA": "Delta", "scoreA": 1, "teamB": "Echo", "scoreB": 0 },
+        { "teamA": "Delta", "scoreA": 0, "teamB": "Foxtrot", "scoreB": 1 },
+        { "teamA": "Echo", "scoreA": 1, "teamB": "Foxtrot", "scoreB": 0 }
+      ]
+    },
+    {
+      "name": "Полуфиналы",
+      "matches": [
+        { "teamA": "1A", "scoreA": 0, "teamB": "2B", "scoreB": 0 },
+        { "teamA": "1B", "scoreA": 0, "teamB": "2A", "scoreB": 0 }
+      ]
+    },
+    {
+      "name": "Финал",
+      "matches": [
+        { "teamA": "Winner SF1", "scoreA": 0, "teamB": "Winner SF2", "scoreB": 0 }
+      ]
+    }
+  ]
+}
