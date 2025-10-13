@@ -7,17 +7,17 @@
           "teamA": "Telesales",
           "scoreA": 0,
           "teamB": "Nepridumali",
-          "scoreB": 0
+          "scoreB": 1
         },
         {
           "teamA": "Nepridumali",
           "scoreA": 0,
           "teamB": "Ураган",
-          "scoreB": 0
+          "scoreB": 1
         },
         {
           "teamA": "Ураган",
-          "scoreA": 0,
+          "scoreA": 1,
           "teamB": "Telesales",
           "scoreB": 0
         }
@@ -28,13 +28,13 @@
       "matches": [
         {
           "teamA": "TBCxPayme",
-          "scoreA": 0,
+          "scoreA": 1,
           "teamB": "CARD GG",
           "scoreB": 0
         },
         {
           "teamA": "CARD GG",
-          "scoreA": 0,
+          "scoreA": 1,
           "teamB": "МЫ НЕ ШАРИМ",
           "scoreB": 0
         },
@@ -42,7 +42,7 @@
           "teamA": "МЫ НЕ ШАРИМ",
           "scoreA": 0,
           "teamB": "TBCxPayme",
-          "scoreB": 0
+          "scoreB": 1
         }
       ]
     },
@@ -50,15 +50,15 @@
       "name": "Полуфиналы",
       "matches": [
         {
-          "teamA": "1 место Группы A",
-          "scoreA": 0,
-          "teamB": "2 место Группы B",
+          "teamA": "Ураган",
+          "scoreA": 1,
+          "teamB": "CARD GG",
           "scoreB": 0
         },
         {
-          "teamA": "1 место Группы B",
-          "scoreA": 0,
-          "teamB": "2 место Группы A",
+          "teamA": "TBCxPayme",
+          "scoreA": 1,
+          "teamB": "Nepridumali",
           "scoreB": 0
         }
       ]
@@ -67,10 +67,10 @@
       "name": "Финал",
       "matches": [
         {
-          "teamA": "Победитель SF1",
+          "teamA": "Ураган",
           "scoreA": 0,
-          "teamB": "Победитель SF2",
-          "scoreB": 0
+          "teamB": "TBCxPayme",
+          "scoreB": 2
         }
       ]
     }
